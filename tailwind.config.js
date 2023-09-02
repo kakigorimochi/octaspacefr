@@ -7,6 +7,9 @@ export default {
     ],
     theme: {
         extend: {},
+        fontFamily: {
+            'octaspace': ['Space Grotesk', 'sans-serif'],
+        },
         fontSize: {
             'octa': ['4em!important'],
             'octa-sm': ['3.3em!important'],
