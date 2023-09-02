@@ -18,6 +18,7 @@
         "moment": "^2.29.4",
         "sass": "^1.66.1",
         "vue": "^3.2.36",
+        "vue-confetti-explosion": "^1.0.2",
         "vue-loader": "^17.0.1",
         "vuestic-ui": "^1.7.4"
     }

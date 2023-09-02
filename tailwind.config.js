@@ -7,6 +7,11 @@ export default {
     ],
     theme: {
         extend: {},
+        fontSize: {
+            'octa': ['4em!important'],
+            'octa-sm': ['3.3em!important'],
+            'octa-sm-fold': ['2.7em!important'],
+        },
     },
     plugins: [],
 }

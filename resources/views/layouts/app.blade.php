@@ -21,6 +21,10 @@
         @yield('css')
         @vite('resources/css/app.css')
 
+        <!-- App Icon -->
+        <link rel="icon" href="{{ asset('assets/img/logo.png') }}" type="image/png" />
+        <link rel="shortcut icon" href="{{ asset('assets/img/logo.png') }}" type="image/png" />
+
         <!-- Fonts -->
         {{-- <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Text&display=swap" rel="stylesheet"> --}}
         <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
