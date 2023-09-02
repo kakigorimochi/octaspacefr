@@ -16,7 +16,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [PageController::class, 'index']);
-
-Route::get('/get_content', [ContentController::class, 'get_content']);
-Route::post('/get_bscscanapi', [ContentController::class, 'get_bscscanapi']);
-Route::post('/upd_content', [ContentController::class, 'update_content']);
+Route::post('/bscscan', [ContentController::class, 'bscscan']);
