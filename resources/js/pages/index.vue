@@ -16,7 +16,7 @@
                         </a>
                     </div>
                     <div class="mb-7 max-[540px]:mb-5 max-[280px]:mb-3">
-                        <h1 class="font-octaspace va-h1 text-octa text-[var(--va-white-primary)!important] max-[540px]:text-octa-sm max-[280px]:text-octa-sm-fold">
+                        <h1 class="va-h1 text-octa text-[var(--va-white-primary)!important] max-[540px]:text-octa-sm max-[280px]:text-octa-sm-fold">
                             Octa<span class="text-[var(--va-accent-third)]">.</span>Space
                         </h1>
                     </div>
@@ -29,7 +29,7 @@
                         <va-progress-bar
                         :model-value="100"
                         class="mb-2"
-                        color="#6F158D"
+                        color="#6F185D"
                         size="large"
                         content-inside
                         >
@@ -37,7 +37,10 @@
                         </va-progress-bar>
                     </div>
                     <div class="text-white mb-[3rem] max-[540px]:mb-[2.3rem]">
-                        <div class="flex mb-[1px] max-[540px]:mb-[1px] max-[280px]:text-[13px]">
+                        <div
+                        id="octausdt-progress-bar-label-percent"
+                        class="flex mb-[3px] max-[280px]:text-[13px]"
+                        >
                             <div class="va-title text-right">
                                 {{ $root.goalProgress ? $root.goalProgress.toFixed(2) : parseFloat(0).toFixed(2) }}%
                             </div>
@@ -59,6 +62,7 @@
                         size="0.6em"
                         />
                         <div
+                        id="octausdt-progress-bar-label-left"
                         v-if="rateLimitedBscScan"
                         class="flex mt-[3px] max-[540px]:mt-[3px] max-[280px]:text-[13px]"
                         >
@@ -70,6 +74,7 @@
                             </div>
                         </div>
                         <div
+                        id="octausdt-progress-bar-label-right"
                         v-else
                         class="flex mt-[3px] max-[540px]:mt-[3px] max-[280px]:text-[13px]"
                         >
@@ -105,8 +110,8 @@
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <p class="text-white mb-[5px] max-[540px]:mb-[3px] max-[540px]:text-[16px] max-[280px]:text-[15px]">
+                    <div id="octaaddress-container">
+                        <p class="text-white mb-[3px] max-[540px]:text-[16px] max-[280px]:text-[14px]">
                             To support the listing of the project on CEX, you can contribute to:
                         </p>
                         <va-input
@@ -119,7 +124,7 @@
                         >
                             <template #appendInner>
                                 <va-icon
-                                class="hover:text-[#6F158D!important]"
+                                class="hover:text-[#6F185D!important]"
                                 title="Copy"
                                 name="content_copy"
                                 size="small"
@@ -194,7 +199,7 @@
 
 <style lang="scss">
 * {
-    font-family: 'Jost', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
 }
 .va-chip--small {
     padding: 0;
@@ -213,6 +218,21 @@
 .va-input-wrapper__field textarea {
     overflow: hidden;
     margin-bottom: 0;
+}
+#octausdt-progress-bar-label-left .va-title,
+#octausdt-progress-bar-label-right .va-title,
+#octausdt-progress-bar-label-percent .va-title {
+    font-size: .8rem;
+}
+@media (max-width: 540px) {
+    #octausdt-progress-bar-label-left .va-title,
+    #octausdt-progress-bar-label-right .va-title,
+    #octausdt-progress-bar-label-percent .va-title  {
+        font-size: .710rem;
+    }
+}
+#octaaddress-container .va-icon.va-icon {
+    font-weight: 600;
 }
 </style>
 

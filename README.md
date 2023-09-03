@@ -1,4 +1,4 @@
-![image](https://github.com/kakigorimochi/octaspacefr/assets/16938949/d02da934-898e-4390-9a36-9c1e3d344d43)
+![image](https://github.com/kakigorimochi/octaspacefr/assets/16938949/8078ccd0-8038-47c0-951b-6d2c44a3316f)
 
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
