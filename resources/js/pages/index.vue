@@ -67,7 +67,7 @@
                         class="flex mt-[3px] max-[540px]:mt-[3px] max-[280px]:text-[13px]"
                         >
                             <div class="va-title text-left">
-                                Rate Limited.
+                                Rate Limited
                             </div>
                             <div class="va-title text-right">
                                 Please refresh page!
