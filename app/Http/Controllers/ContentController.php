@@ -15,7 +15,7 @@ class ContentController extends Controller
         '&contractaddress=' . $request->contractAddress .
         '&address=' . $request->address .
         '&tag=latest' .
-        '&apikey=' . config('app.BSCSCAN_API_KEY'));
+        '&apikey=' . env('BSCSCAN_API_KEY'));
 
         return $result->json();
     }
