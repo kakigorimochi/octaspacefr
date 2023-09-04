@@ -67,10 +67,10 @@
                         class="flex mt-[3px] max-[540px]:mt-[3px] max-[280px]:text-[13px]"
                         >
                             <div class="va-title text-left">
-                                Rate Limited
+                                {{ invalidBscScanAPIKEY ? 'Error!' : 'Rate Limited' }}
                             </div>
                             <div class="va-title text-right">
-                                Please refresh page!
+                                {{ invalidBscScanAPIKEY ? 'Invalid API key' : 'Please refresh page!' }}
                             </div>
                         </div>
                         <div
@@ -251,6 +251,7 @@ export default {
                 usdt: null
             },
             rateLimitedBscScan: false,
+            invalidBscScanAPIKEY: false,
             screenWidth: window.innerWidth,
         };
     },
@@ -307,6 +308,7 @@ export default {
             } else {
                 this.rateLimitedBscScan = true;
                 this.$root.prompt(response.data.result);
+                (response.data.result === 'Invalid API Key') && (this.invalidBscScanAPIKEY = true);
 
                 this.balance.usdt = parseFloat(0).toLocaleString(undefined, {
                     minimumFractionDigits: 2, maximumFractionDigits: 2
