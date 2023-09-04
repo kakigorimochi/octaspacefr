@@ -2,7 +2,7 @@
     <div class="h-screen relative overflow-hidden bg-gradient-to-r from-[#161A26] to-[#040207]">
         <div class="flex items-center min-h-[100vh]">
             <div class="flex w-9/12 py-8 mt-[-10em] max-[1024px]:mt-[-5em] max-[540px]:mt-[-7em] max-[375px]:mt-[-3.7em]">
-                <div class="shrink w-1/8 m-auto max-[414px]:mx-[20px] max-[280px]:mx-[12px]">
+                <div class="shrink w-1/8 m-auto max-[428px]:mx-[20px] max-[280px]:mx-[12px]">
                     <ConfettiExplosion
                     v-if="$root.goalProgress === 100 && balance.octa !== null && balance.usdt !== null"
                     />
