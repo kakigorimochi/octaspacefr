@@ -133,7 +133,7 @@
                                 />
                             </template>
                         </va-input>
-                        <div class="flex my-[5px] max-[540px]:my-[7px]">
+                        <div class="flex my-[6px] max-[540px]:my-[7px]">
                             <div class="text-left">
                                 <va-chip
                                 class="mr-[7px] hover:bg-[#3FD959!important]"
