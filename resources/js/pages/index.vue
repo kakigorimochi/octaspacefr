@@ -231,9 +231,9 @@
         font-size: .710rem;
     }
 }
-#octaaddress-container .va-icon.va-icon {
-    font-weight: 600;
-}
+// #octaaddress-container .va-icon.va-icon {
+//     font-weight: 600;
+// }
 </style>
 
 <script setup>
