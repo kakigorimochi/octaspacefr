@@ -39,7 +39,7 @@
                     <div class="text-white mb-[3rem] max-[540px]:mb-[2.3rem]">
                         <div
                         id="octausdt-progress-bar-label-percent"
-                        class="flex mb-[3px] max-[280px]:text-[13px]"
+                        class="flex mb-[3px] max-[540px]:mb-[1px] max-[280px]:text-[13px]"
                         >
                             <div class="va-title text-right">
                                 {{ $root.goalProgress ? $root.goalProgress.toFixed(2) : parseFloat(0).toFixed(2) }}%
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                     <div id="octaaddress-container">
-                        <p class="text-white mb-[3px] max-[540px]:text-[16px] max-[280px]:text-[14px]">
+                        <p class="text-white mb-[4.5px] max-[540px]:text-[16px] max-[280px]:text-[14px]">
                             To support the listing of the project on CEX, you can contribute to:
                         </p>
                         <va-input
@@ -133,7 +133,7 @@
                                 />
                             </template>
                         </va-input>
-                        <div class="flex my-[5px] max-[540px]:my-[2px]">
+                        <div class="flex my-[5px] max-[540px]:my-[7px]">
                             <div class="text-left">
                                 <va-chip
                                 class="mr-[7px] hover:bg-[#3FD959!important]"
