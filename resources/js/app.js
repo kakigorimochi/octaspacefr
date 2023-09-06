@@ -13,6 +13,7 @@ const app = createApp({
             goalAmount: 30000,
             accountAddress: '0x325E5411a63fE64603EC881ce0F6AB78235E8C61',
             usdtBEP20ContractAddress: '0x55d398326f99059fF775485246999027B3197955',
+            busdBEP20ContractAddress: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
             showCreator: Math.random() < 0.5, // Randomized true or false
         };
     },
@@ -21,8 +22,7 @@ const app = createApp({
     },
     methods: {
         convertWeiToUnit(value) {
-            let UnitValue = (parseFloat(value.toString()) / Math.pow(10, 18)).toFixed(18);
-            return UnitValue.replace(/\.?0+$/, '');
+            return parseFloat(value.toString()) / Math.pow(10, 18).toFixed(18);
         },
         prompt(msg = "Something went wrong.") {
             this.$vaToast.init({
@@ -44,7 +44,7 @@ const app = createApp({
             // Remove the temporary input element
             document.body.removeChild(tempInput);
 
-            this.prompt("Copied to clipboard.");
+            this.prompt("Copied to clipboard");
         }
     }
 });

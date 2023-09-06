@@ -16,4 +16,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [PageController::class, 'index']);
-Route::post('/bscscan', [ContentController::class, 'bscscan']);
+Route::post('/api', [ContentController::class, 'api']);
