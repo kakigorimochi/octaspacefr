@@ -4,7 +4,7 @@
             <div class="flex w-9/12 py-8 mt-[-10em] max-[1024px]:mt-[-5em] max-[540px]:mt-[-7em] max-[375px]:mt-[-3.7em]">
                 <div class="shrink w-1/8 m-auto max-[428px]:mx-[20px] max-[280px]:mx-[12px]">
                     <ConfettiExplosion
-                    v-if="$root.goalProgress === 100 && balance.octa !== null && balance.usdt !== null"
+                    v-if="$root.goalProgress >= 100 && balance.octa !== null && balance.usdt !== null && balance.busd !== null"
                     />
                     <div class="inline-flex mb-3">
                         <a
@@ -22,7 +22,7 @@
                     </div>
                     <div class="mb-12 max-[540px]:mb-7 max-[540px]:ml-0.5">
                         <div class="font-light text-[2.07em] max-[540px]:text-[1.67em] max-[280px]:text-[1.27em] max-[280px]:mr-[25px] text-white">
-                            Exchange enlistment, Fund Raising
+                            Exchange listing crowdfund
                         </div>
                     </div>
                     <div class="text-white mb-[10px] max-[540px]:mb-[15px]">
@@ -33,7 +33,7 @@
                         size="large"
                         content-inside
                         >
-                            {{ balance.octa ? balance.octa : parseFloat(0).toFixed(2) }} OCTA
+                            {{ balance.octa ? formatValuetoLocale(balance.octa) : formatValuetoLocale(0) }} OCTA
                         </va-progress-bar>
                     </div>
                     <div class="text-white mb-[3rem] max-[540px]:mb-[2.3rem]">
@@ -42,22 +42,27 @@
                         class="flex mb-[3px] max-[540px]:mb-[1px] max-[280px]:text-[13px]"
                         >
                             <div class="va-title text-right">
-                                {{ $root.goalProgress ? $root.goalProgress.toFixed(2) : parseFloat(0).toFixed(2) }}%
+                                {{ formatValuetoLocale($root.goalProgress) }}%
                             </div>
                         </div>
                         <va-progress-bar
-                        v-if="$root.goalProgress === 100"
+                        v-if="$root.goalProgress >= 100"
                         :model-value="$root.goalProgress"
                         class="mb-2"
                         color="#F0B90B"
                         size="large"
                         content-inside
                         >
-                            {{ balance.usdt ? balance.usdt : parseFloat(0).toFixed(2) }} USDT
+                            {{
+                                balance.usdt && balance.busd ?
+                                formatValuetoLocale($root.goalAmount - (balance.usdt + balance.busd)) : formatValuetoLocale(0)
+                            }}
+                            USDT
                         </va-progress-bar>
                         <va-progress-bar
                         v-else
                         :model-value="$root.goalProgress"
+                        :indeterminate="!isCached && !balance.usdt && !balance.busd"
                         color="#F0B90B"
                         size="0.6em"
                         />
@@ -78,33 +83,27 @@
                         v-else
                         class="flex mt-[3px] max-[540px]:mt-[3px] max-[280px]:text-[13px]"
                         >
-                            <div v-if="$root.goalProgress === 100" class="va-title text-left">
+                            <div v-if="$root.goalProgress >= 100" class="va-title text-left">
                                 Goal Reached
                             </div>
                             <div v-else class="va-title text-left">
                                 {{
-                                    balance.usdt ?
-                                    (
-                                        $root.goalAmount - parseFloat(balance.usdt.replace(/,/g, ''))
-                                    ).toLocaleString(undefined, {
-                                        minimumFractionDigits: 2, maximumFractionDigits: 2
-                                    }) :
-                                    parseFloat(0).toFixed(2)
+                                    balance.usdt && balance.busd ?
+                                    formatValuetoLocale($root.goalAmount - (balance.usdt + balance.busd)) : formatValuetoLocale(0)
                                 }}
                                 USDT remaining...
                             </div>
-                            <div v-if="$root.goalProgress === 100" class="va-title text-right">
+                            <div v-if="$root.goalProgress >= 100" class="va-title text-right">
                                 Thank you for your support!
                             </div>
                             <div v-else class="va-title text-right">
-                                {{ balance.usdt ? balance.usdt : parseFloat(0).toFixed(2) }}
+                                {{
+                                    balance.usdt && balance.busd ?
+                                    formatValuetoLocale(balance.usdt + balance.busd) : formatValuetoLocale(0)
+                                }}
                                 /
                                 {{
-                                    (
-                                        parseFloat($root.goalAmount)
-                                    ).toLocaleString(undefined, {
-                                        minimumFractionDigits: 2, maximumFractionDigits: 2
-                                    })
+                                    formatValuetoLocale($root.goalAmount)
                                 }}
                                 USDT
                             </div>
@@ -112,7 +111,7 @@
                     </div>
                     <div id="octaaddress-container">
                         <p class="text-white mb-[4.5px] max-[540px]:text-[16px] max-[280px]:text-[14px]">
-                            To support the listing of the project on CEX, you can contribute to:
+                            To support the listing of the project on CEX, you can contribute via:
                         </p>
                         <va-input
                         id="octawallet-address"
@@ -231,9 +230,6 @@
         font-size: .710rem;
     }
 }
-// #octaaddress-container .va-icon.va-icon {
-//     font-weight: 600;
-// }
 </style>
 
 <script setup>
@@ -248,8 +244,10 @@ export default {
         return {
             balance: {
                 octa: null,
-                usdt: null
+                usdt: null,
+                busd: null,
             },
+            isCached: false,
             rateLimitedBscScan: false,
             invalidBscScanAPIKEY: false,
             screenWidth: window.innerWidth,
@@ -260,67 +258,85 @@ export default {
     },
     mounted() {
         (this.balance.octa === null) && axios({
-            method: 'GET',
+            method: 'POST',
             type: 'JSON',
-            url: 'https://explorer.octa.space/api?module=account&action=balance&address=' + this.$root.accountAddress
+            url: '/api',
+            data: {
+                api: 'octa',
+                address: this.$root.accountAddress,
+            }
         }).then(response => {
             if (response.data.status == 1) {
-                const octa = this.$root.convertWeiToUnit(response.data.result);
-
-                this.balance.octa = parseFloat(octa).toLocaleString(undefined, {
-                    minimumFractionDigits: 2, maximumFractionDigits: 2
-                });
+                this.balance.octa = this.$root.convertWeiToUnit(response.data.result);
             } else {
-                this.$root.prompt(response.data.message);
-
-                this.balance.octa = parseFloat(0).toLocaleString(undefined, {
-                    minimumFractionDigits: 2, maximumFractionDigits: 2
-                });
+                this.$root.prompt(response.data.result);
+                this.balance.octa = 0.00;
             }
         }).catch(error => {
             this.$root.prompt(error.response);
-
-            this.balance.octa = parseFloat(0).toLocaleString(undefined, {
-                minimumFractionDigits: 2, maximumFractionDigits: 2
-            });
+            this.balance.octa = 0.00;
         });
 
         (this.balance.usdt === null) && axios({
             method: 'POST',
             type: 'JSON',
-            url: '/bscscan',
+            url: '/api',
             data: {
+                api: 'bsc',
                 contractAddress: this.$root.usdtBEP20ContractAddress,
                 address: this.$root.accountAddress,
             }
         }).then(response => {
             if (response.data.status == 1) {
-                const usdt = this.$root.convertWeiToUnit(response.data.result);
-
-                this.balance.usdt = parseFloat(usdt).toLocaleString(undefined, {
-                    minimumFractionDigits: 2, maximumFractionDigits: 2
-                });
-
-                this.$root.goalProgress = parseFloat((
-                        parseFloat(this.balance.usdt.replace(/,/g, '')) / this.$root.goalAmount * 100
-                    ).toFixed(2)
-                );
+                this.balance.usdt = this.$root.convertWeiToUnit(response.data.result);
+                this.updateProgressPercentage();
             } else {
-                this.rateLimitedBscScan = true;
                 this.$root.prompt(response.data.result);
-                (response.data.result === 'Invalid API Key') && (this.invalidBscScanAPIKEY = true);
+                this.balance.usdt = 0.00;
 
-                this.balance.usdt = parseFloat(0).toLocaleString(undefined, {
-                    minimumFractionDigits: 2, maximumFractionDigits: 2
-                });
+                response.data.result === 'Invalid API Key' && (this.invalidBscScanAPIKEY = true);
+                this.rateLimitedBscScan = true;
             }
         }).catch(error => {
             this.$root.prompt(error.response);
-
-            this.balance.usdt = parseFloat(0).toLocaleString(undefined, {
-                minimumFractionDigits: 2, maximumFractionDigits: 2
-            });
+            this.balance.usdt = 0.00;
         });
+
+        (this.balance.busd === null) && axios({
+            method: 'POST',
+            type: 'JSON',
+            url: '/api',
+            data: {
+                api: 'bsc',
+                contractAddress: this.$root.busdBEP20ContractAddress,
+                address: this.$root.accountAddress,
+            }
+        }).then(response => {
+            if (response.data.status == 1) {
+                this.balance.busd = this.$root.convertWeiToUnit(response.data.result);
+                this.updateProgressPercentage(response.data.result.cached);
+            } else {
+                this.$root.prompt(response.data.result);
+                this.balance.busd = 0.00;
+
+                response.data.result === 'Invalid API Key' && (this.invalidBscScanAPIKEY = true);
+                this.rateLimitedBscScan = true;
+            }
+        }).catch(error => {
+            this.$root.prompt(error.response);
+            this.balance.busd = 0.00;
+        });
+    },
+    methods: {
+        updateProgressPercentage(cached=null) {
+            this.balance.usdt !== null && this.balance.busd !== null && (
+                this.$root.goalProgress = (this.balance.usdt + this.balance.busd) / this.$root.goalAmount * 100
+            )
+            cached && (this.isCached = true);
+        },
+        formatValuetoLocale(value) {
+            return value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        },
     },
 }
 </script>
