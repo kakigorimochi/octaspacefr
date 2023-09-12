@@ -18,32 +18,36 @@ class ContentController extends Controller
         if (Cache::has($key)) {
             $result = Cache::get($key) ? Cache::get($key) : $result;
             Cache::get($key) && $result['cached'] = true;
-        } else {
-            if ($request->api === 'bsc' && (isset($request->contractAddress) && $request->contractAddress !== null)) {
-                $url = 'https://api.bscscan.com/api' .
-                '?module=account' .
-                '&action=tokenbalance' .
-                '&contractaddress=' . $request->contractAddress .
-                '&address=' . $request->address .
-                '&tag=latest' .
-                '&apikey=' . env('BSCSCAN_API_KEY');
-            } else {
-                $url = 'https://explorer.octa.space/api' .
-                '?module=account' .
-                '&action=balance' .
-                '&address=' . $request->address;
-            }
-            $response = Http::get($url);
 
-            if ($response->successful()) {
-                $result = $response->json();
-
-                Cache::put($key, $result, env('CACHE_EXPIRY_IN_SECS'));
-                $result['cached'] = false;
-            } else {
-                return response()->json($result);
-            }
+            return response()->json($result);
         }
+
+        if ($request->api === 'bsc' && (isset($request->contractAddress) && $request->contractAddress !== null)) {
+            $url = 'https://api.bscscan.com/api' .
+            '?module=account' .
+            '&action=tokenbalance' .
+            '&contractaddress=' . $request->contractAddress .
+            '&address=' . $request->address .
+            '&tag=latest' .
+            '&apikey=' . env('BSCSCAN_API_KEY');
+        } else {
+            $url = 'https://explorer.octa.space/api' .
+            '?module=account' .
+            '&action=balance' .
+            '&address=' . $request->address;
+        }
+
+        $response = Http::get($url);
+
+        if ($response->successful()) {
+            $result = $response->json();
+            Cache::put($key, $result, now()->addSeconds(env('CACHE_EXPIRY_IN_SECS')));
+
+            $result['cached'] = false;
+        } else {
+            return response()->json($result);
+        }
+
         return response()->json($result);
     }
 }
