@@ -4,7 +4,7 @@
             <div class="flex w-9/12 py-8 mt-[-10em] max-[1024px]:mt-[-5em] max-[540px]:mt-[-7em] max-[375px]:mt-[-3.7em]">
                 <div class="shrink w-1/8 m-auto max-[428px]:mx-[20px] max-[280px]:mx-[12px]">
                     <ConfettiExplosion
-                    v-if="$root.goalProgress >= 100 && balance.octa !== null && balance.usdt !== null && balance.busd !== null"
+                    v-if="$root.goalProgress >= $root.goalAmountPercentage && balance.octa !== null && balance.usdt !== null && balance.busd !== null"
                     />
                     <div class="inline-flex mb-3">
                         <a
@@ -42,12 +42,12 @@
                         class="flex mb-[3px] max-[540px]:mb-[1px] max-[280px]:text-[13px]"
                         >
                             <div class="va-title text-right">
-                                {{ formatValuetoLocale($root.goalProgress) }}%
+                                {{ $root.goalProgress >= $root.goalAmountPercentage ? formatValuetoLocale(100) : formatValuetoLocale($root.goalProgress) }}%
                             </div>
                         </div>
                         <va-progress-bar
-                        v-if="$root.goalProgress >= 100"
-                        :model-value="$root.goalProgress"
+                        v-if="$root.goalProgress >= $root.goalAmountPercentage"
+                        :model-value="$root.goalProgress >= $root.goalAmountPercentage ? 100 : $root.goalProgress"
                         class="mb-2"
                         color="#F0B90B"
                         size="large"
@@ -55,7 +55,7 @@
                         >
                             {{
                                 balance.usdt && balance.busd ?
-                                formatValuetoLocale($root.goalAmount - (balance.usdt + balance.busd)) : formatValuetoLocale(0)
+                                formatValuetoLocale((balance.usdt + balance.busd)) : formatValuetoLocale(0)
                             }}
                             USDT
                         </va-progress-bar>
@@ -83,7 +83,7 @@
                         v-else
                         class="flex mt-[3px] max-[540px]:mt-[3px] max-[280px]:text-[13px]"
                         >
-                            <div v-if="$root.goalProgress >= 100" class="va-title text-left">
+                            <div v-if="$root.goalProgress >= $root.goalAmountPercentage" class="va-title text-left">
                                 Goal Reached
                             </div>
                             <div v-else class="va-title text-left">
@@ -93,7 +93,7 @@
                                 }}
                                 USDT remaining...
                             </div>
-                            <div v-if="$root.goalProgress >= 100" class="va-title text-right">
+                            <div v-if="$root.goalProgress >= $root.goalAmountPercentage" class="va-title text-right">
                                 Thank you for your support!
                             </div>
                             <div v-else class="va-title text-right">
